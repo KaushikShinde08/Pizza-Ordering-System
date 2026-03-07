@@ -1,4 +1,4 @@
-package pizza_ordering.Pizza.Ordering;
+package pizza_ordering;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

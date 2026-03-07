@@ -1,4 +1,4 @@
-package pizza_ordering.Pizza.Ordering;
+package pizza_ordering;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
