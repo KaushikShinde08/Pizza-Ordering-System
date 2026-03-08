@@ -1,7 +1,6 @@
 package pizza_ordering.entity;
 
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,21 +17,22 @@ public class Products {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "product_id")
     private Long productId;
 
-    @Column(nullable = false)
+    @Column(name = "product_name",nullable = false)
     private String productName;
 
-    @Column(nullable = false)
+    @Column(name = "description",nullable = false)
     private String  description;
 
-    @Column(nullable = false,unique = true)
+    @Column(name = "category_id",nullable = false,unique = true)
     private Long categoryId;
 
-    @Column(nullable = false)
-    private double prize;
+    @Column(name = "product_price",nullable = false)
+    private double price;
 
-    @Column(nullable = false)
+    @Column(name = "stock_quantity",nullable = false)
     private Long stockQuantity;
 
 }

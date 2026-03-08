@@ -27,9 +27,8 @@ public class User {
     @Column (name = "password_hash",nullable = false)
     private String passwordHash;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "role_id", nullable = false)
-//    private Role role;
+    @Column(name = "roles",nullable = false)
+    private Role role;
 
     @Column (name = "created_at",nullable = false,updatable = false)
     private LocalDateTime createdAt;
