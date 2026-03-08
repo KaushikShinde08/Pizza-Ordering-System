@@ -27,7 +27,8 @@ public class Products {
     private String  description;
 
     @Column(name = "category_id",nullable = false,unique = true)
-    private Long categoryId;
+    @ManyToOne
+    private Categories categoryId;
 
     @Column(name = "product_price",nullable = false)
     private double price;
