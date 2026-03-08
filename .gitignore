@@ -1,0 +1,13 @@
+# IntelliJ
+.idea/
+*.iml
+
+# Maven
+target/
+
+# React
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
