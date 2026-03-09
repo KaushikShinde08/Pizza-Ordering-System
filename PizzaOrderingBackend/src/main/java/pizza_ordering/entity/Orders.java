@@ -7,37 +7,29 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "orders")
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
-@Getter
-@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Orders {
 
     @Id
-    @Column(name = "order_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_id")
     private Long orderId;
 
-    @Column(nullable = false)
-    private Long userId;
-
-    @Column(nullable = false)
-    private Long productId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(nullable = false)
     private int orderQuantity;
 
     @Column(nullable = false)
-    private double orderPrice;
+    private double totalAmount;
 
     @Column(nullable = false)
-    private String status;
+    private String orderStatus;
 
     @Column(nullable = false)
-    private LocalDateTime createdAt;
-
-    private int rating;
-
-
+    private LocalDateTime orderTime;
 }
