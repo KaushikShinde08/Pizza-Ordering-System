@@ -46,7 +46,7 @@ public class OrderService {
             orderItem.setOrder(order);
             orderItem.setProduct(item.getProduct());
             orderItem.setQuantity(item.getQuantity());
-            orderItem.setPriceAtPurchase(item.getPriceAtTime());
+            orderItem.setPriceAtPurchase((int) item.getPriceAtTime());
 
             orderItemRepository.save(orderItem);
         }

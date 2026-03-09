@@ -8,6 +8,8 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Setter
+@Getter
 public class CartItems {
 
     @Id
@@ -27,5 +29,7 @@ public class CartItems {
     private int quantity;
 
     @Column(name = "price_at_time", nullable = false)
-    private int priceAtTime;
+    private double priceAtTime;
+
+
 }

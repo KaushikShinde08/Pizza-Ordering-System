@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-
+@Getter
+@Setter
 public class User {
 
     @Id
@@ -28,7 +28,7 @@ public class User {
     private String passwordHash;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role")
+    @Column(name = "roles")
     private Role role;
 
     @Column (name = "created_at",nullable = false,updatable = false)
