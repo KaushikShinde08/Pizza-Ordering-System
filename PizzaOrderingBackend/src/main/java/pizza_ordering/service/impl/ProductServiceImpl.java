@@ -28,6 +28,7 @@ public class ProductServiceImpl implements ProductService {
                 .price(request.getPrice())
                 .stockQuantity(request.getStockQuantity())
                 .category(category)
+                .isAvailable(request.getStockQuantity()>0)
                 .build();
         return productRepository.save(product);
     }
