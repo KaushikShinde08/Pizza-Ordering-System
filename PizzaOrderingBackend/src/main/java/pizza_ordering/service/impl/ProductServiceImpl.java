@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pizza_ordering.dto.ProductRequest;
+import pizza_ordering.dto.ProductResponse;
 import pizza_ordering.repository.CategoryRepository;
 import pizza_ordering.repository.ProductRepository;
 import pizza_ordering.service.ProductService;
@@ -19,7 +20,7 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public Product createProduct(ProductRequest request) {
+    public ProductResponse createProduct(ProductRequest request) {
         Categories category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found with id: " + request.getCategoryId()));
 
@@ -30,38 +31,110 @@ public class ProductServiceImpl implements ProductService {
                 .category(category)
                 .isAvailable(request.getStockQuantity()>0)
                 .build();
-        return productRepository.save(product);
+
+        Product savedProduct = productRepository.save(product);
+        return mapToResponse(savedProduct);
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductResponse> getAllProducts() {
+        return productRepository.findAll()
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+
     }
 
     @Override
-    public Product getProductById(Long productId) {
-        return productRepository.findById(productId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found with id: " + productId));
+    public ProductResponse getProductById(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        return mapToResponse(product);
     }
 
     @Override
-    public Product updateProduct(Long productId, ProductRequest request) {
+    public ProductResponse updateProduct(Long productId, ProductRequest request) {
 
-        Product product = getProductById(productId);
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
 
         product.setProductName(request.getProductName());
         product.setPrice(request.getPrice());
         product.setStockQuantity(request.getStockQuantity());
+        product.setIsAvailable(request.getStockQuantity() > 0);
 
-        return productRepository.save(product);
+        Product updatedProduct = productRepository.save(product);
+        return mapToResponse(updatedProduct);
     }
 
     @Override
     public void deleteProduct(Long productId) {
 
-        Product product = getProductById(productId);
+        if(!productRepository.existsById(productId)){
+            throw new RuntimeException("Product not found with id: " + productId);
+        }
 
-        productRepository.delete(product);
+        productRepository.deleteById(productId);
+    }
+
+    @Override
+    public List<ProductResponse> getProductsByCategory(Long categoryId) {
+
+        return productRepository.findByCategory_CategoryId(categoryId)
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
+    @Override
+    public void reduceStock(Long productId, Integer quantity) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
+
+        if(product.getStockQuantity() < quantity){
+            throw new RuntimeException("Insufficient stock");
+        }
+        int newStock = product.getStockQuantity() - quantity;
+        product.setStockQuantity(newStock);
+
+        if(newStock == 0){
+            product.setIsAvailable(false);
+        }
+
+        productRepository.save(product);
+    }
+
+
+    private ProductResponse mapToResponse(Product product){
+
+        return ProductResponse.builder()
+                .productId(product.getProductId())
+                .productName(product.getProductName())
+                .price(product.getPrice())
+                .stockQuantity(product.getStockQuantity())
+                .isAvailable(product.getIsAvailable())
+                .categoryId(product.getCategory().getCategoryId())
+                .categoryName(product.getCategory().getCategoryName())
+                .build();
+    }
+
+
+    @Override
+    public ProductResponse addStock(Long productId, Integer quantity) {
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        product.setStockQuantity(product.getStockQuantity() + quantity);
+
+        if(product.getStockQuantity() > 0){
+            product.setIsAvailable(true);
+        }
+
+        Product updated = productRepository.save(product);
+
+        return mapToResponse(updated);
     }
 
 }
