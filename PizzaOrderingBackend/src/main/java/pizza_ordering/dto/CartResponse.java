@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 public class CartResponse {
 
-    private int cartId;
+    private Long cartId;
 
     private List<CartItemResponse> items;
 

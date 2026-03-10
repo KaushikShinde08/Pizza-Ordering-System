@@ -11,11 +11,15 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderResponse {
 
+    private Long userId;
+
     private Long orderId;
 
     private String status;
 
     private double totalAmount;
+
+    private int totalQuantity;
 
     private List<OrderItemResponse> items;
 
