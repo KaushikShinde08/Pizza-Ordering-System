@@ -6,6 +6,8 @@ import pizza_ordering.dto.OrderItemResponse;
 import pizza_ordering.dto.OrderResponse;
 import pizza_ordering.entity.*;
 import pizza_ordering.repository.*;
+import pizza_ordering.service.ProductService;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,7 +21,9 @@ public class OrderService {
     private final CartItemRepository cartItemRepository;
     private final OrderRepository orderRepository;
     private final OrderItemsRepository orderItemRepository;
+    private final ProductService productService;
 
+    @Transactional
     public OrderResponse placeOrder(User user){
 
         Cart cart = cartRepository.findByUser(user)
@@ -48,6 +52,8 @@ public class OrderService {
         List<OrderItemResponse> responseItems = new ArrayList<>();
 
         for(CartItems item : items){
+
+            productService.reduceStock(item.getProduct().getProductId(), item.getQuantity());
 
             OrderItems orderItem = new OrderItems();
             orderItem.setOrder(order);
